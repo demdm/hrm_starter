@@ -186,7 +186,7 @@ if (YII_ENV_DEV) {
     ];
 
     $config['components']['cache'] = [
-        'class' => yii\caching\DummyCache::class
+        'class' => yii\caching\FileCache::class
     ];
     $config['components']['mailer']['transport'] = [
         'class' => 'Swift_SmtpTransport',

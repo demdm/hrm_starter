@@ -218,6 +218,72 @@ $logEntries[] = [
                             'visible' => Yii::$app->user->can('administrator'),
                         ],
                         [
+                            'label' => Yii::t('backend', 'Publications'),
+                            'options' => ['class' => 'nav-header'],
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Social Network'),
+                            'url' => '#',
+                            'icon' => FAS::icon('newspaper', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'socialNetwork' === Yii::$app->controller->module->id
+                                && (
+                                    'account' === Yii::$app->controller->id
+                                    || 'photo' === Yii::$app->controller->id
+                                ),
+                            'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'Photos'),
+                                    'url' => ['/socialNetwork/photo/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => (
+                                        'socialNetwork' === Yii::$app->controller->module->id
+                                        && 'photo' === Yii::$app->controller->id
+                                    ),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Accounts'),
+                                    'url' => ['/socialNetwork/account/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'account',
+                                ],
+                            ],
+                        ],
+                        [
+                            'label' => Yii::t('backend', 'Unsplash Search'),
+                            'url' => '#',
+                            'icon' => FAS::icon('newspaper', ['class' => ['nav-icon']]),
+                            'options' => ['class' => 'nav-item has-treeview'],
+                            'active' => 'unsplashSearchPhoto' === Yii::$app->controller->module->id
+                                && ('setting' === Yii::$app->controller->id
+                                    || 'photo' === Yii::$app->controller->id
+                                    || 'request' === Yii::$app->controller->id
+                                ),
+                            'items' => [
+                                [
+                                    'label' => Yii::t('backend', 'Photos'),
+                                    'url' => ['/unsplashSearchPhoto/photo/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => (
+                                         Yii::$app->controller->module->id === 'unsplashSearchPhoto'
+                                         && Yii::$app->controller->id === 'photo'
+                                    ),
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Requests'),
+                                    'url' => ['/unsplashSearchPhoto/request/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'request',
+                                ],
+                                [
+                                    'label' => Yii::t('backend', 'Settings'),
+                                    'url' => ['/unsplashSearchPhoto/setting/index'],
+                                    'icon' => FAR::icon('circle', ['class' => ['nav-icon']]),
+                                    'active' => Yii::$app->controller->id === 'setting',
+                                ],
+                            ],
+                        ],
+                        [
                             'label' => Yii::t('backend', 'Content'),
                             'options' => ['class' => 'nav-header'],
                         ],

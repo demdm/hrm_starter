@@ -56,7 +56,10 @@
     "trntv/sitemaped": "^0.1",
     "yii2mod/yii2-swagger": "^1.1",
     "rmrevin/yii2-fontawesome": "^3.4",
-    "kartik-v/yii2-widgets": "^3.4"
+    "kartik-v/yii2-widgets": "^3.4",
+    "unsplash/unsplash": "^2.5",
+    "raiym/instagram-php-scraper": "^0.9.10",
+    "tioffs/instalite": "^1.0"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "^2.0.0",

@@ -20,25 +20,17 @@ $config = [
         ],
     ],
     'modules' => [
-        'content' => [
-            'class' => backend\modules\content\Module::class,
-        ],
-        'widget' => [
-            'class' => backend\modules\widget\Module::class,
-        ],
-        'file' => [
-            'class' => backend\modules\file\Module::class,
-        ],
-        'system' => [
-            'class' => backend\modules\system\Module::class,
-        ],
-        'translation' => [
-            'class' => backend\modules\translation\Module::class,
-        ],
+        'content' => backend\modules\content\Module::class,
+        'widget' => backend\modules\widget\Module::class,
+        'file' => backend\modules\file\Module::class,
+        'system' => backend\modules\system\Module::class,
+        'translation' => backend\modules\translation\Module::class,
         'rbac' => [
             'class' => backend\modules\rbac\Module::class,
             'defaultRoute' => 'rbac-auth-item/index',
         ],
+        'socialNetwork' => backend\modules\socialNetwork\Module::class,
+        'unsplashSearchPhoto' => backend\modules\unsplashSearchPhoto\Module::class,
     ],
     'as globalAccess' => [
         'class' => common\behaviors\GlobalAccessBehavior::class,
