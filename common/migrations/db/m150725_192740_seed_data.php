@@ -13,15 +13,16 @@ class m150725_192740_seed_data extends Migration
     {
         $this->insert('{{%user}}', [
             'id' => 1,
-            'username' => 'webmaster',
-            'email' => 'webmaster@example.com',
-            'password_hash' => Yii::$app->getSecurity()->generatePasswordHash('webmaster'),
+            'username' => 'admin',
+            'email' => env('WEBMASTER_EMAIL'),
+            'password_hash' => Yii::$app->getSecurity()->generatePasswordHash(env('WEBMASTER_PASSWORD')),
             'auth_key' => Yii::$app->getSecurity()->generateRandomString(),
             'access_token' => Yii::$app->getSecurity()->generateRandomString(40),
             'status' => User::STATUS_ACTIVE,
             'created_at' => time(),
             'updated_at' => time()
         ]);
+        /*
         $this->insert('{{%user}}', [
             'id' => 2,
             'username' => 'manager',
@@ -44,13 +45,16 @@ class m150725_192740_seed_data extends Migration
             'created_at' => time(),
             'updated_at' => time()
         ]);
+        */
 
         $this->insert('{{%user_profile}}', [
             'user_id' => 1,
             'locale' => Yii::$app->sourceLanguage,
-            'firstname' => 'John',
-            'lastname' => 'Doe'
+            'firstname' => 'Dmitry',
+            'lastname' => 'Demianov',
+            'gender' => 1,
         ]);
+        /*
         $this->insert('{{%user_profile}}', [
             'user_id' => 2,
             'locale' => Yii::$app->sourceLanguage
@@ -59,6 +63,7 @@ class m150725_192740_seed_data extends Migration
             'user_id' => 3,
             'locale' => Yii::$app->sourceLanguage
         ]);
+        */
 
         $this->insert('{{%page}}', [
             'slug' => 'about',
@@ -219,11 +224,19 @@ class m150725_192740_seed_data extends Migration
         ]);
 
         $this->delete('{{%user_profile}}', [
-            'user_id' => [1, 2, 3]
+            'user_id' => [
+                1,
+                //2,
+                //3,
+            ]
         ]);
 
         $this->delete('{{%user}}', [
-            'id' => [1, 2, 3]
+            'id' => [
+                1,
+                //2,
+                //3,
+            ]
         ]);
     }
 }

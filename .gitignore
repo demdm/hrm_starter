@@ -39,3 +39,6 @@ tests/codeception/*/_support/_generated/*
 # Instagram temp
 /backend/web/cookies.txt
 /backend/web/instagram_cookie.txt
+
+# Database data
+/docker/mysql/database
