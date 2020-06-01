@@ -24,7 +24,8 @@ services:
       - 80:80
     volumes:
       - ./:/app
-      - ./docker/nginx/vhost.conf:/etc/nginx/conf.d/vhost.conf
+#      - ./docker/nginx/vhost.conf:/etc/nginx/conf.d/vhost.conf
+      - ./docker/nginx/vhost_single_domain.conf:/etc/nginx/conf.d/vhost.conf
     depends_on:
       - app
 

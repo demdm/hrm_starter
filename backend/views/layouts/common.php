@@ -107,13 +107,13 @@ $logEntries[] = [
                 ],
                 '<li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User image']).'
+                        '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/admin/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white', 'user-image'], 'alt' => 'User image']).'
                         '.Html::tag('span', Yii::$app->user->identity->publicIdentity, ['class' => ['d-none', 'd-md-inline']]).'
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
                         <li class="user-header bg-primary">
-                            '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white'], 'alt' => 'User image']).'
+                            '.Html::img(Yii::$app->user->identity->userProfile->getAvatar('/admin/img/anonymous.png'), ['class' => ['img-circle', 'elevation-2', 'bg-white'], 'alt' => 'User image']).'
                             <p>
                                 '.Yii::$app->user->identity->publicIdentity.'
                                 <small>'.Yii::t('backend', 'Member since {0, date, short}', Yii::$app->user->identity->created_at).'</small>
@@ -167,7 +167,7 @@ $logEntries[] = [
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <?php echo Html::img(
-                        Yii::$app->user->identity->userProfile->getAvatar('/img/anonymous.png'),
+                        Yii::$app->user->identity->userProfile->getAvatar('/admin/img/anonymous.png'),
                         ['class' => ['img-circle', 'elevation-2', 'bg-white'], 'alt' => 'User image']
                     ) ?>
                 </div>
