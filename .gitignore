@@ -34,7 +34,7 @@ phpunit.phar
 tests/codeception/*/_support/_generated/*
 
 # Storage
-/storage/photoStock/*
+/storage/photoStock/unsplash/*
 
 # Instagram temp
 /backend/web/cookies.txt
