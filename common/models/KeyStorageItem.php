@@ -9,8 +9,8 @@ use yii\db\ActiveRecord;
 /**
  * This is the model class for table "key_storage_item".
  *
- * @property integer $key
- * @property integer $value
+ * @property string $key
+ * @property string $value
  */
 class KeyStorageItem extends ActiveRecord
 {

@@ -2,6 +2,7 @@
 
 namespace common\services;
 
+use common\models\KeyStorageItem;
 use Crew\Unsplash\HttpClient;
 use Crew\Unsplash\PageResult;
 use Crew\Unsplash\Search;
@@ -17,10 +18,14 @@ class Unsplash
      */
     public function __construct()
     {
+        $accessKey = KeyStorageItem::find()->where(['key' => 'unsplash.access_key'])->one()->value;
+        $secretKey = KeyStorageItem::find()->where(['key' => 'unsplash.secret_key'])->one()->value;
+        $appName = KeyStorageItem::find()->where(['key' => 'unsplash.app_name'])->one()->value;
+
         HttpClient::init([
-            'applicationId'	=> env('UNSPLASH_ACCESS_KEY'),
-            'secret'		=> env('UNSPLASH_SECRET_KEY'),
-            'utmSource'     => env('UNSPLASH_APPLICATION_NAME'),
+            'applicationId'	=> $accessKey,
+            'secret'		=> $secretKey,
+            'utmSource'     => $appName,
         ]);
     }
 
