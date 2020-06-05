@@ -12,6 +12,7 @@ use Yii;
  * @property string|null $social_network_photo_id
  * @property string|null $filename
  * @property string|null $file_caption
+ * @property string|null $hash_tags
  * @property bool $is_skipped
  * @property string|null $skip_message
  * @property string|null $posted_at
@@ -40,6 +41,7 @@ class SocialNetworkPhoto extends \yii\db\ActiveRecord
             ['is_skipped', 'boolean'],
             [['posted_at', 'created_at'], 'safe'],
             [['filename', 'file_caption', 'skip_message', 'social_network_photo_id'], 'string', 'max' => 255],
+            ['hash_tags', 'string', 'max' => 3000],
             [['social_network_account_id'], 'exist', 'skipOnError' => true, 'targetClass' => SocialNetworkAccount::class, 'targetAttribute' => ['social_network_account_id' => 'id']],
         ];
     }
@@ -55,6 +57,7 @@ class SocialNetworkPhoto extends \yii\db\ActiveRecord
             'social_network_photo_id' => Yii::t('app', 'Social Network Photo ID'),
             'filename' => Yii::t('app', 'Filename'),
             'file_caption' => Yii::t('app', 'File Caption'),
+            'hash_tags' => Yii::t('app', 'Hash Tags'),
             'is_skipped' => Yii::t('app', 'Is Skipped'),
             'skip_message' => Yii::t('app', 'Skip Message'),
             'posted_at' => Yii::t('app', 'Posted At'),

@@ -24,7 +24,7 @@ class SocialNetworkPhotoSearch extends SocialNetworkPhoto
     {
         return [
             [['id', 'social_network_account_id'], 'integer'],
-            [['filename', 'file_caption', 'posted_at', 'created_at'], 'safe'],
+            [['filename', 'file_caption', 'hash_tags', 'posted_at', 'created_at'], 'safe'],
             [['is_posted', 'is_skipped'], 'boolean'],
             ['social_network_photo_id', 'string', 'max' => 255],
         ];
@@ -78,6 +78,7 @@ class SocialNetworkPhotoSearch extends SocialNetworkPhoto
             ->andFilterWhere(['like', 'social_network_photo_id', $this->social_network_photo_id])
             ->andFilterWhere(['like', 'filename', $this->filename])
             ->andFilterWhere(['like', 'file_caption', $this->file_caption])
+            ->andFilterWhere(['like', 'hash_tags', $this->hash_tags])
         ;
 
         return $dataProvider;

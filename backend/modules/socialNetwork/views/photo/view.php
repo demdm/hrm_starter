@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'social_network_account_id',
                     'filename',
                     'file_caption',
+                    'hash_tags',
                     'is_skipped',
                     'skip_message',
                     'posted_at',

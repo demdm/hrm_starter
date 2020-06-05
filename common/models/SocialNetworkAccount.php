@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $name
+ * @property string|null $hash_tags
  * @property string|null $comment
  * @property string $type
  * @property string $login
@@ -46,6 +47,7 @@ class SocialNetworkAccount extends \yii\db\ActiveRecord
             [['comment'], 'string'],
             [['extra'], 'safe'],
             [['name', 'type', 'login', 'password'], 'string', 'max' => 255],
+            ['hash_tags', 'string', 'max' => 3000],
             ['is_active', 'boolean'],
             [['count_published', 'count_skipped'], 'integer'],
         ];
@@ -59,6 +61,7 @@ class SocialNetworkAccount extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+            'hash_tags' => Yii::t('app', 'Hash Tags'),
             'comment' => Yii::t('app', 'Comment'),
             'type' => Yii::t('app', 'Type'),
             'login' => Yii::t('app', 'Login'),

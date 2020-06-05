@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attributes' => [
                     'id',
                     'name',
+                    'hash_tags',
                     'comment:ntext',
                     'type',
                     'login',

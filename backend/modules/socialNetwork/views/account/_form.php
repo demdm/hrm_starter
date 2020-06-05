@@ -18,6 +18,7 @@ use yii\bootstrap4\ActiveForm;
                 <?= $form->errorSummary($model); ?>
 
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'hash_tags')->textarea(['rows' => 6]) ?>
                 <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
 
                 <?= $form->field($model, 'type')->dropDownList(

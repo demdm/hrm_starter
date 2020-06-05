@@ -20,7 +20,7 @@ class SocialNetworkAccountSearch extends SocialNetworkAccount
         return [
             [['id', 'count_published', 'count_skipped'], 'integer'],
             [['is_active'], 'boolean'],
-            [['name', 'comment', 'type', 'login', 'password', 'extra'], 'safe'],
+            [['name', 'comment', 'type', 'login', 'password', 'extra', 'hash_tags'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class SocialNetworkAccountSearch extends SocialNetworkAccount
             ->andFilterWhere(['like', 'login', $this->login])
             ->andFilterWhere(['like', 'password', $this->password])
             ->andFilterWhere(['like', 'extra', $this->extra])
+            ->andFilterWhere(['like', 'hash_tags', $this->hash_tags])
         ;
 
         return $dataProvider;

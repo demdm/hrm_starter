@@ -1,5 +1,6 @@
 <?php
 $config = [
+    'timeZone' => 'Europe/Kiev',
     'components' => [
         'assetManager' => [
             'class' => yii\web\AssetManager::class,

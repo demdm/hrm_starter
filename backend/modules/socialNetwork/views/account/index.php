@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'filter' => SocialNetworkAccount::TYPE_LIST,
                     ],
                     'login',
+                    // 'hash_tags',
                     'count_published',
                     'count_skipped',
                     [

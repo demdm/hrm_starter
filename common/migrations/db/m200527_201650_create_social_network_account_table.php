@@ -16,6 +16,7 @@ class m200527_201650_create_social_network_account_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
             'comment' => $this->text(),
+            'hash_tags' => $this->text(),
             'type' => $this->string()->notNull(),
             'login' => $this->string()->notNull(),
             'password' => $this->string()->notNull(),

@@ -48,9 +48,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             ->column()
                         ,
                     ],
-                    'social_network_photo_id',
                     'filename',
                     'file_caption',
+                    // 'hash_tags',
                     [
                         'attribute' => 'is_posted',
                         'format' => 'raw',
