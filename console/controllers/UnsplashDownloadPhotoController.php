@@ -12,6 +12,8 @@ class UnsplashDownloadPhotoController extends Controller
 {
     public function actionIndex()
     {
+        $this->stdout("Downloading...\n", Console::FG_YELLOW);
+
         $unsplashPhotoList = UnsplashSearchPhoto::find()
             ->joinWith(
                 'setting setting',
@@ -21,14 +23,16 @@ class UnsplashDownloadPhotoController extends Controller
                 'downloaded_at' => null,
                 'setting.is_active' => true,
             ])
-            ->orderBy(['created_at' => SORT_ASC])
+            ->orderBy([
+                'setting.id' => SORT_DESC,
+                'created_at' => SORT_ASC,
+            ])
             ->all();
 
-        $this->stdout(sprintf("Count photos: %d\n", count($unsplashPhotoList)), Console::FG_YELLOW);
+        $totalCountPhotoFailed = 0;
+        $totalCountPhotoDownloaded = 0;
 
         foreach ($unsplashPhotoList as $key => $unsplashPhoto) {
-            $this->stdout(sprintf("Searched by: %s\n", $unsplashPhoto->setting->search), Console::FG_YELLOW);
-
             $filename = Yii::getAlias("@storage/photoStock/unsplash/{$unsplashPhoto->unsplash_id}.jpg");
 
             $isPhotoDownloaded = file_put_contents(
@@ -37,11 +41,9 @@ class UnsplashDownloadPhotoController extends Controller
             );
 
             if (false === $isPhotoDownloaded || 0 === $isPhotoDownloaded) {
-                $this->stdout("Photo downloading failed", Console::FG_RED);
+                $totalCountPhotoFailed++;
                 continue;
             }
-
-            $this->stdout("Photo downloaded\n", Console::FG_GREEN);
 
             $socialNetworkPhoto = new SocialNetworkPhoto();
             $socialNetworkPhoto->social_network_account_id = $unsplashPhoto->setting->social_network_account_id;
@@ -58,19 +60,31 @@ class UnsplashDownloadPhotoController extends Controller
                 $socialNetworkPhoto->save();
 
                 Yii::$app->db->transaction->commit();
+
+                $totalCountPhotoDownloaded++;
+
+                $this->stdout(sprintf("[%s]: downloaded\n", $unsplashPhoto->setting->search), Console::FG_GREEN);
             } catch (\Exception $e) {
                 Yii::$app->db->transaction->rollBack();
-
-                $this->stdout(sprintf("DB error message: %s", $e->getMessage()), Console::FG_RED);
 
                 if (file_exists($filename)) {
                     unlink($filename);
                 }
-            }
 
-            $this->stdout(" - - - - - \n");
+                $totalCountPhotoFailed++;
+            }
         }
 
-        $this->stdout("Finished!\n", Console::FG_GREEN);
+        $this->stdout(
+            sprintf(
+                "Total: all %d, downloaded %d, failed %d\n",
+                count($unsplashPhotoList),
+                $totalCountPhotoDownloaded,
+                $totalCountPhotoFailed
+            ),
+            Console::FG_GREEN
+        );
+
+        $this->stdout("Downloading finished!\n\n", Console::FG_YELLOW);
     }
 }

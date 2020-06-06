@@ -2,7 +2,7 @@
 
 namespace console\controllers;
 
-use common\models\SocialNetworkPhoto;
+use common\models\SocialNetworkAccount;
 use common\services\Instagram;
 use Yii;
 use yii\console\Controller;
@@ -12,116 +12,104 @@ class SocialNetworkPublishPhotoController extends Controller
 {
     public function actionIndex()
     {
-        $socialNetworkPhotoList = SocialNetworkPhoto::find()
-            ->joinWith(
-                'socialNetworkAccount socialNetworkAccount',
-                false
-            )
-            ->where([
-                'socialNetworkAccount.is_active' => true,
-                'posted_at' => null,
-                'is_skipped' => null,
-            ])
-            ->orderBy(['created_at' => SORT_ASC])
-            ->all()
-        ;
+        $this->stdout("Publishing...\n", Console::FG_YELLOW);
 
-        if (empty($socialNetworkPhotoList)) {
-            $this->stdout("No one photo found\n", Console::FG_GREEN);
-            return;
+        $accountList = SocialNetworkAccount::find()
+            ->where(['is_active' => true])
+            ->all();
+
+        if (empty($accountList)) {
+            $this->stdout("Account: not found\n", Console::FG_RED);
         }
 
-        /** @var Instagram[] $indexedByIdInstagram */
-        $indexedByIdInstagram = [];
+        $totalCountPhoto = 0;
+        $totalCountPhotoDownloaded = 0;
+        $totalCountPhotoSkipped = 0;
 
-        /** @var array[] $indexedByIdHashTags */
-        $indexedByIdHashTags = [];
+        foreach ($accountList as $account) {
+            $photoList = $account->getSocialNetworkPhotos()
+                ->where([
+                    'posted_at' => null,
+                    'is_skipped' => null,
+                ])
+                ->orderBy([
+                    'created_at' => SORT_ASC,
+                ])
+                ->all()
+            ;
 
-        foreach ($socialNetworkPhotoList as $socialNetworkPhoto) {
-            $socialNetworkAccount = $socialNetworkPhoto->socialNetworkAccount;
+            $instagram = new Instagram($account->login, $account->password);
+            $accountHashTagList = array_unique(array_diff(explode(' ', $account->hash_tags), ['']));
 
-            if (!isset($indexedByIdInstagram[$socialNetworkAccount->id])) {
-                $indexedByIdInstagram[$socialNetworkAccount->id] = new Instagram(
-                    $socialNetworkAccount->login,
-                    $socialNetworkAccount->password
-                );
-            }
+            $countPhotoDownloaded = 0;
+            $countPhotoSkipped = 0;
 
-            $photoCaption = $socialNetworkPhoto->file_caption ?: '';
+            $this->stdout(sprintf("[%s]: publishing", $account->name), Console::FG_GREEN);
 
-            // добавляем хеш теги
-            $hashTagList = [];
-            if ($socialNetworkAccount->hash_tags) {
-                if (!isset($indexedByIdHashTags[$socialNetworkAccount->id])) {
-                    $indexedByIdHashTags[$socialNetworkAccount->id] = array_unique(
-                        array_diff(
-                            explode(' ', $socialNetworkAccount->hash_tags),
-                            ['']
-                        )
-                    );
+            foreach ($photoList as $photo) {
+                shuffle($accountHashTagList);
+                $photoHashTagList = array_slice($accountHashTagList,0,28);
+                $photoCaption = $photo->file_caption
+                    . ($photo->file_caption ? ' ' : '')
+                    . '#' . implode(' #', $photoHashTagList);
+
+                try {
+                    $publishedPhotoId = $instagram->publishPhoto($photo->filename, $photoCaption);
+                } catch (\Exception $e) {
+                    $photo->skip_message = $e->getMessage();
+                    $publishedPhotoId = null;
                 }
 
-                // перемешали и обрезали массив
-                shuffle($indexedByIdHashTags[$socialNetworkAccount->id]);
-                $hashTagList = array_slice(
-                    $indexedByIdHashTags[$socialNetworkAccount->id],
-                    0,
-                    28
-                ); // 28 - максимальное число хеш тегов для фото
+                // фото не опубликовано
+                if (null === $publishedPhotoId) {
+                    $photo->is_skipped = true;
+                    $account->count_skipped++;
 
-                $photoCaption .= ($photoCaption ? ' ' : '') . '#' . implode(' #', $hashTagList);
+                    $countPhotoSkipped++;
+                    $totalCountPhotoSkipped++;
+                    $this->stdout(".", Console::FG_RED);
+                } else {
+                    // не факт, что опубликовано - инстаграм иногда врет
+
+                    $photo->hash_tags = !empty($hashTagList) ? implode(' ', $hashTagList) : null;
+                    $photo->posted_at = date('Y-m-d H:i:s');
+                    $photo->social_network_photo_id = $publishedPhotoId;
+                    $account->count_published++;
+
+                    $countPhotoDownloaded++;
+                    $totalCountPhotoDownloaded++;
+                    $this->stdout(".", Console::FG_GREEN);
+                }
+
+                unlink($photo->filename);
+                $photo->filename = null;
+                $photo->save();
             }
 
-            $instagram = $indexedByIdInstagram[$socialNetworkAccount->id];
+            $account->save();
 
-            try {
-                $publishedSocialNetworkPhotoId = $instagram->publishPhoto(
-                    $socialNetworkPhoto->filename,
-                    $photoCaption
-                );
-            } catch (\Exception $e) {
-                $publishedSocialNetworkPhotoId = null;
-
-                // пропускаем фото и сохраняем ошибку, если инстаграм отвис
-                $socialNetworkPhoto->skip_message = $e->getMessage();
-            }
-
-            // фото не опубликовано
-            if (null === $publishedSocialNetworkPhotoId) {
-                $socialNetworkPhoto->is_skipped = true;
-                $socialNetworkAccount->count_skipped++;
-
-                $this->stdout("Photo skipped\n", Console::FG_RED);
-            } else {
-                // не факт, что опубликовано
-                // инстаграм врет
-                $socialNetworkPhoto->hash_tags = !empty($hashTagList) ? implode(' ', $hashTagList) : null;
-                $socialNetworkPhoto->posted_at = date('Y-m-d H:i:s');
-                $socialNetworkPhoto->social_network_photo_id = $publishedSocialNetworkPhotoId;
-                $socialNetworkAccount->count_published++;
-
-                $this->stdout("Photo published\n", Console::FG_GREEN);
-            }
-
-            Yii::$app->db->beginTransaction();
-
-            try {
-                $socialNetworkAccount->save();
-
-                // удаляем фото
-                unlink($socialNetworkPhoto->filename);
-
-                $socialNetworkPhoto->filename = null;
-                $socialNetworkPhoto->save();
-
-                Yii::$app->db->transaction->commit();
-            } catch (\Exception $e) {
-                Yii::$app->db->transaction->rollBack();
-
-                $this->stdout(sprintf("DB error: %s", $e->getMessage()), Console::FG_RED);
-            }
+            $this->stdout(
+                sprintf(
+                    "\n[%s]: all %d, downloaded %d, skipped %d\n",
+                    $account->name,
+                    count($photoList),
+                    $countPhotoDownloaded,
+                    $countPhotoSkipped
+                ),
+                Console::FG_GREEN
+            );
         }
 
-        $this->stdout("Finished!\n", Console::FG_GREEN);
+        $this->stdout(
+            sprintf(
+                "Total: all %d, downloaded %d, skipped %d\n",
+                $totalCountPhoto,
+                $totalCountPhotoDownloaded,
+                $totalCountPhotoSkipped
+            ),
+            Console::FG_GREEN
+        );
+
+        $this->stdout("Publishing finished!\n", Console::FG_YELLOW);
     }
 }
