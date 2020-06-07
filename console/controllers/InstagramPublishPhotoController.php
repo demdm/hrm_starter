@@ -4,7 +4,6 @@ namespace console\controllers;
 
 use common\models\SocialNetworkAccount;
 use common\services\Instagram;
-use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -67,7 +66,6 @@ class InstagramPublishPhotoController extends Controller
                 // фото не опубликовано
                 if (null === $publishedPhotoId) {
                     $photo->is_skipped = true;
-                    $account->count_skipped++;
 
                     $countPhotoSkipped++;
                     $totalCountPhotoSkipped++;
@@ -78,7 +76,6 @@ class InstagramPublishPhotoController extends Controller
                     $photo->hash_tags = !empty($hashTagList) ? implode(' ', $hashTagList) : null;
                     $photo->posted_at = date('Y-m-d H:i:s');
                     $photo->social_network_photo_id = $publishedPhotoId;
-                    $account->count_published++;
 
                     $countPhotoDownloaded++;
                     $totalCountPhotoDownloaded++;
@@ -89,8 +86,6 @@ class InstagramPublishPhotoController extends Controller
                 $photo->filename = null;
                 $photo->save();
             }
-
-            $account->save();
 
             $this->stdout(
                 sprintf(

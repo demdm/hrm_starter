@@ -20,12 +20,6 @@ use yii\bootstrap4\ActiveForm;
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($model, 'hash_tags')->textarea(['rows' => 6]) ?>
                 <?= $form->field($model, 'comment')->textarea(['rows' => 6]) ?>
-
-                <?= $form->field($model, 'type')->dropDownList(
-                    SocialNetworkAccount::TYPE_LIST,
-                    ['prompt' => Yii::t('backend', 'Please select an item...')]
-                ) ?>
-
                 <?= $form->field($model, 'login')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($model, 'password')->textInput(['maxlength' => true]) ?>
                 <?= $form->field($model, 'is_active')->checkbox() ?>

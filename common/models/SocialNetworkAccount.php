@@ -11,12 +11,11 @@ use Yii;
  * @property string $name
  * @property string|null $hash_tags
  * @property string|null $comment
- * @property string $type
  * @property string $login
  * @property string $password
- * @property string|null $extra
  * @property int $count_published
- * @property int $count_skipped
+ * @property int $count_likes
+ * @property int $count_subscribers
  * @property bool $is_active
  *
  * @property SocialNetworkPhoto[] $socialNetworkPhotos
@@ -24,11 +23,6 @@ use Yii;
  */
 class SocialNetworkAccount extends \yii\db\ActiveRecord
 {
-    const TYPE_INSTAGRAM = 'instagram';
-    const TYPE_LIST = [
-        self::TYPE_INSTAGRAM => 'Instagram',
-    ];
-
     /**
      * {@inheritdoc}
      */
@@ -43,13 +37,12 @@ class SocialNetworkAccount extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'type', 'login', 'password'], 'required'],
+            [['name', 'login', 'password'], 'required'],
             [['comment'], 'string'],
-            [['extra'], 'safe'],
             [['name', 'type', 'login', 'password'], 'string', 'max' => 255],
             ['hash_tags', 'string', 'max' => 3000],
             ['is_active', 'boolean'],
-            [['count_published', 'count_skipped'], 'integer'],
+            [['count_published', 'count_likes', 'count_subscribers'], 'integer'],
         ];
     }
 
@@ -63,12 +56,11 @@ class SocialNetworkAccount extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'hash_tags' => Yii::t('app', 'Hash Tags'),
             'comment' => Yii::t('app', 'Comment'),
-            'type' => Yii::t('app', 'Type'),
             'login' => Yii::t('app', 'Login'),
             'password' => Yii::t('app', 'Password'),
-            'extra' => Yii::t('app', 'Extra'),
             'count_published' => Yii::t('app', 'Count Published'),
-            'count_skipped' => Yii::t('app', 'Count Skipped'),
+            'count_likes' => Yii::t('app', 'Count Likes'),
+            'count_subscribers' => Yii::t('app', 'Count Subscribers'),
             'is_active' => Yii::t('app', 'Is Active'),
         ];
     }

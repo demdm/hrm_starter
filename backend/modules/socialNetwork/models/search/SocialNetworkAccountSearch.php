@@ -18,9 +18,9 @@ class SocialNetworkAccountSearch extends SocialNetworkAccount
     public function rules()
     {
         return [
-            [['id', 'count_published', 'count_skipped'], 'integer'],
+            [['id', 'count_published', 'count_likes', 'count_subscribers'], 'integer'],
             [['is_active'], 'boolean'],
-            [['name', 'comment', 'type', 'login', 'password', 'extra', 'hash_tags'], 'safe'],
+            [['name', 'comment', 'login', 'password', 'hash_tags'], 'safe'],
         ];
     }
 
@@ -55,14 +55,13 @@ class SocialNetworkAccountSearch extends SocialNetworkAccount
         $query
             ->andFilterWhere(['id' => $this->id])
             ->andFilterWhere(['count_published' => $this->count_published])
-            ->andFilterWhere(['count_skipped' => $this->count_published])
+            ->andFilterWhere(['count_likes' => $this->count_likes])
+            ->andFilterWhere(['count_subscribers' => $this->count_subscribers])
             ->andFilterWhere(['is_active' => $this->is_active])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'comment', $this->comment])
-            ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'login', $this->login])
             ->andFilterWhere(['like', 'password', $this->password])
-            ->andFilterWhere(['like', 'extra', $this->extra])
             ->andFilterWhere(['like', 'hash_tags', $this->hash_tags])
         ;
 

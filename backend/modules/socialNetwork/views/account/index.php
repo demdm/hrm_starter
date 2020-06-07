@@ -40,14 +40,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
                     'id',
                     'name',
-                    [
-                        'attribute' => 'type',
-                        'filter' => SocialNetworkAccount::TYPE_LIST,
-                    ],
                     'login',
                     // 'hash_tags',
                     'count_published',
-                    'count_skipped',
+                    [
+                        'attribute' => 'count_likes',
+                        'value' => function (SocialNetworkAccount $data) {
+                            return sprintf(
+                                "%d [%d]",
+                                $data->count_likes,
+                                ($data->count_published > 0
+                                    ? round($data->count_likes/$data->count_published)
+                                    : 0
+                                )
+                            );
+                        },
+                    ],
+                    'count_subscribers',
                     [
                         'attribute' => 'is_active',
                         'filter' => $statusList,
@@ -57,7 +66,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     // 'comment:ntext',
                     // 'password',
-                    // 'extra',
                     [
                         'class' => \common\widgets\ActionColumn::class,
                         'template' => '{view} {update}',

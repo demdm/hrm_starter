@@ -2,6 +2,7 @@
 
 namespace common\services;
 
+use InstagramScraper\Model\Media;
 use InstaLite\InstaLite;
 use InstagramScraper\Instagram as InstagramScraper;
 
@@ -74,6 +75,17 @@ class Instagram
     ) : ?string
     {
         return $this->getInstagramScraper()->addComment($mediaId, $text, $repliedToCommentId);
+    }
+
+    /**
+     * @return Media[]
+     * @throws \InstagramScraper\Exception\InstagramAuthException
+     * @throws \InstagramScraper\Exception\InstagramException
+     * @throws \InstagramScraper\Exception\InstagramNotFoundException
+     */
+    public function getMyMedias(): array
+    {
+        return $this->getInstagramScraper()->getMedias($this->username, 1000000);
     }
 
     /**
