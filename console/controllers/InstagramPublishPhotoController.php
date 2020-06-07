@@ -8,7 +8,7 @@ use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 
-class SocialNetworkPublishPhotoController extends Controller
+class InstagramPublishPhotoController extends Controller
 {
     public function actionIndex()
     {
@@ -37,6 +37,10 @@ class SocialNetworkPublishPhotoController extends Controller
                 ])
                 ->all()
             ;
+
+            if (empty($photoList)) {
+                continue;
+            }
 
             $instagram = new Instagram($account->login, $account->password);
             $accountHashTagList = array_unique(array_diff(explode(' ', $account->hash_tags), ['']));

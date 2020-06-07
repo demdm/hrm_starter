@@ -19,6 +19,7 @@ class UnsplashSearchPhotoController extends Controller
 
         // получаем настройки
         $settingList = UnsplashSearchPhotoSetting::find()
+            ->with('socialNetworkAccount')
             ->where([
                 'is_active' => true,
                 'is_finished' => false,
@@ -33,6 +34,10 @@ class UnsplashSearchPhotoController extends Controller
 
         foreach ($settingList as $setting) {
             if ($setting->is_finished) {
+                continue;
+            }
+
+            if (!$setting->socialNetworkAccount->is_active) {
                 continue;
             }
 
